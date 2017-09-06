@@ -1,0 +1,19 @@
+<div id="container">
+			<section id="content">
+				<div id="inner">
+          <md-card>
+            <md-card-header>
+              <div md-card-avatar> </div>
+              <md-card-title>{{user_displayName}}</md-card-title>
+              <md-card-subtitle>{{user_email}}</md-card-subtitle>
+            </md-card-header>
+            <img md-card-image [src]="user_photo" alt="photoURL">
+            <md-card-content>
+              <button md-raised-button color="warn" (click)="logout()">
+                Logout <i class="material-icons">exit_to_app</i>
+              </button>
+            </md-card-content>
+          </md-card>
+			</div>
+		</section>
+	</div>
