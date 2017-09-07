@@ -1,4 +1,4 @@
-Code example for Google authentication with Angular, Firebase and Angular Material
+# Code example for Google authentication with Angular, Firebase and Angular Material
 
 ![Alt text](https://pbs.twimg.com/media/DJDyjYdUEAAPrp2.jpg "Login Component")
 
