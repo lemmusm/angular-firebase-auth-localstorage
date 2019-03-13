@@ -1,23 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~https://fonts.googleapis.com/icon?family=Material+Icons';
-@import '~https://fonts.googleapis.com/css?family=Fira+Sans:100,300,400,700';
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'https://fonts.googleapis.com/css?family=Fira+Sans:100,300,400,700';
 
+/* CSS Document */
 
-@charset "UTF-8";
-		/* CSS Document */
-
-		*{border:0; margin: 0; text-decoration: none}
-		html, body { height: 100%; }
-		body { background-color: #E9EAED; font-family: 'Fira Sans';}
-
-		#container { display: table; height: 100%; width: 100%; margin: 0;}
-		#content{ display: table-cell; vertical-align: middle; position: relative; }
-
-		#inner{font-weight: 400; margin: 0 auto; max-width: 360px;  text-align: center; width: 40%; }
-		#columnBlockTwo{display: inline-block; height: auto; padding-top: 25px; text-align: center;}
-
-		/*Edit material css*/
-		.mat-card-header-text .mat-card-title {color: #34495e; font-weight: 700}
-		.mat-card-content{padding-top: 2em}
+* {
+  border: 0;
+  margin: 0;
+  text-decoration: none;
+}
+html,
+body {
+  background-color: #e9eaed !important;
+  font-family: 'Fira Sans' !important;
+}

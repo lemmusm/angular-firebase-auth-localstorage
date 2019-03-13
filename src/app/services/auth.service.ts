@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { Router } from '@angular/router';
 
@@ -23,11 +23,11 @@ export class AuthService {
   ***REMOVED***
 
     loginWithGoogle() {
-      
+
       //setCustomParameters host domain (hd)
-      
+
       /**
-      
+
         let provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope('email');
         provider.setCustomParameters({
@@ -40,9 +40,9 @@ export class AuthService {
         .catch((error)=>{
           console.log(error)
       ***REMOVED***);
-        
+
       **/
-      
+
       this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then((data)=>{
         this.router.navigate(['/dashboard']);

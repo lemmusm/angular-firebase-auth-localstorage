@@ -1,19 +1,26 @@
-<div id="container">
-			<section id="content">
-				<div id="inner">
-          <md-card>
-            <md-card-header>
-              <div md-card-avatar> </div>
-              <md-card-title>{{user_displayName}}</md-card-title>
-              <md-card-subtitle>{{user_email}}</md-card-subtitle>
-            </md-card-header>
-            <img md-card-image [src]="user_photo" alt="photoURL">
-            <md-card-content>
-              <button md-raised-button color="warn" (click)="logout()">
-                Logout <i class="material-icons">exit_to_app</i>
-              </button>
-            </md-card-content>
-          </md-card>
-			</div>
-		</section>
-	</div>
+<div class="container mt-5">
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <h2>Data from service authentication</h2>
+    </div>
+  </div>
+  <div class="row mt-5 justify-content-center">
+    <div class="card" style="width: 20rem;">
+      <img
+        class="card-img-top"
+        src="{{ userdata.photoURL }}"
+        alt="Card image cap"
+      />
+      <div class="card-body">
+        <h5 class="card-title">
+          <strong>{{ userdata.displayName }}</strong>
+        </h5>
+        <p class="card-text">{{ userdata.email }}</p>
+        <p class="card-text"><strong>UID:</strong> {{ userdata.uid }}</p>
+        <a href="#" class="btn btn-danger">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

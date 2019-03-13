@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -7,18 +7,15 @@ import {AuthService} from '../../services/auth.service';
   styles: []
 })
 export class LoginComponent implements OnInit {
+  constructor(private _loginAuthService: AuthService) {}
 
-  constructor(private _loginAuthService: AuthService) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-***REMOVED***
-
-  loginWithGoogle(){
+  loginWithGoogle() {
     this._loginAuthService.loginWithGoogle();
 ***REMOVED***
 
-  logout(){
+  logout() {
     this._loginAuthService.logout();
 ***REMOVED***
-
 }
