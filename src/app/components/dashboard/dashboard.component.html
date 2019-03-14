@@ -17,7 +17,7 @@
         </h5>
         <p class="card-text">{{ userdata.email }}</p>
         <p class="card-text"><strong>UID:</strong> {{ userdata.uid }}</p>
-        <a href="#" class="btn btn-danger">
+        <a href="#" class="btn btn-danger" (click)="logout()">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>
       </div>
