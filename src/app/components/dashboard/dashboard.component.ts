@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../interfaces/User';
+import { UserService } from './../../services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,28 +8,17 @@ import { User } from '../../interfaces/User';
   styles: []
 })
 export class DashboardComponent implements OnInit {
-  userdata: User = {
-    displayName: '',
-    email: '',
-    uid: '',
-    photoURL: ''
-***REMOVED***;
-
-  constructor(private _authservice: AuthService, private router: Router) {
-    this._authservice.afAuth.authState.subscribe(auth => {
-      if (auth === null) {
-        this.router.navigate(['/login']);
-    ***REMOVED*** else {
-        this.userdata = auth;
-        this.router.navigate(['/dashboard']);
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***
+  constructor(
+    private _authservice: AuthService,
+    public userservice: UserService
+  ) {
+    this.userservice.getUserLoggedIn(); // Bring user data from local storage
+  }
 
   ngOnInit() {}
 
   logout() {
     this._authservice.logout();
     console.log('Logged out');
-***REMOVED***
+  }
 }

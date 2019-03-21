@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
-***REMOVED***,
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^7.2.9",
@@ -35,7 +35,7 @@
     "rxjs-compat": "^6.0.0-rc.0",
     "tslib": "^1.9.0",
     "zone.js": "^0.8.26"
-***REMOVED***,
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",
     "@angular/cli": "^7.3.5",
@@ -56,5 +56,5 @@
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
     "typescript": "~3.2.4"
-***REMOVED***
+  }
 }

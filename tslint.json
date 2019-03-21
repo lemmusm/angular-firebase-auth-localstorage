@@ -37,7 +37,7 @@
           "static-method",
           "instance-method"
         ]
-    ***REMOVED***
+      }
     ],
     "no-arg": true,
     "no-bitwise": true,
@@ -100,7 +100,7 @@
         "parameter": "nospace",
         "property-declaration": "nospace",
         "variable-declaration": "nospace"
-    ***REMOVED***
+      }
     ],
     "typeof-compare": true,
     "unified-signatures": true,
@@ -137,5 +137,5 @@
     "no-access-missing-member": true,
     "templates-use-public": true,
     "invoke-injectable": true
-***REMOVED***
+  }
 }

@@ -8,15 +8,17 @@
     <div class="card" style="width: 20rem;">
       <img
         class="card-img-top"
-        src="{{ userdata.photoURL }}"
+        src="{{ userservice.userLogged?.photoURL }}"
         alt="Card image cap"
       />
       <div class="card-body">
         <h5 class="card-title">
-          <strong>{{ userdata.displayName }}</strong>
+          <strong>{{ userservice.userLogged?.displayName }}</strong>
         </h5>
-        <p class="card-text">{{ userdata.email }}</p>
-        <p class="card-text"><strong>UID:</strong> {{ userdata.uid }}</p>
+        <p class="card-text">{{ userservice.userLogged?.email }}</p>
+        <p class="card-text">
+          <strong>UID:</strong> {{ userservice.userLogged?.uid }}
+        </p>
         <a href="#" class="btn btn-danger" (click)="logout()">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>

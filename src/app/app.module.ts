@@ -13,6 +13,7 @@ import { AuthService } from './services/auth.service';
 //Routes
 import { APP_ROUTING } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, DashboardComponent],
@@ -23,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     APP_ROUTING,
     BrowserAnimationsModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

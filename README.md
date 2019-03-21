@@ -1,4 +1,4 @@
-# Angular firebase authentication
+# Angular firebase authentication with local storage
 
 ## Steps for create project
 
@@ -17,16 +17,16 @@ Create project firebase on 👉 [Firebase console](https://console.firebase.goog
 Add credentials in our Angular project configuration file `environment.ts` located in `src/environments/environment.ts`
 
 ```
-***REMOVED***
-***REMOVED***
+export const environment = {
+  firebase: {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_AUTH_DOMAIN",
     databaseURL: "YOUR_DATABASE_URL",
     projectId: "YOUR_PROJECT_ID",
     storageBucket: "YOUR_STORAGE_BUCKET",
     messagingSenderId: "YOUR_SENDER_ID"
-***REMOVED***
-***REMOVED***
+  }
+};
 ```
 
 ### 4.- Install dependencies
@@ -69,7 +69,7 @@ import { environment } from '../environments/environment';
 
 ### 7.- Create interface called User
 
-`ng g i User`
+`ng g i interfaces/User`
 
 ```
 export interface User {
@@ -80,77 +80,122 @@ export interface User {
 }
 ```
 
-### 8.- Create service
+### 8.- Create user service
 
-`ng g s providers/auth --skipTests`
+`ng g s providers/user --skipTests`
 
-In the auth.service.ts file, import AngularFireAuth, firebase and Observable. Create an observable user variable, inject FirebaseAuth in the constructor and create sign in methods.
+In the user service we create two methods `setUserLoggedIn()` to set the user data when it login, adding it to the localStorage of the browser, and `getUserLoggedIn()` to return the localStorage user.
 
 ```
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { User } from '../interfaces/User';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+  userLogged: User;
+
+  constructor() {}
+
+  setUserLoggedIn(user: User) {
+    this.userLogged = user;
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  getUserLoggedIn() {
+    return JSON.parse(localStorage.getItem('currentUser'));
+  }
+}
+
+```
+
+### 9.- Create auth service
+
+`ng g s providers/auth --skipTests`
+
+In the auth.service.ts file, import AngularFireAuth, firebase and Observable. Create an observable user variable, inject FirebaseAuth, Router and UserService in the constructor and create sign in methods.
+
+In `getDataFromFirebase()` method will get user data from firebase and saves on user variable. If user is logged into, the user data from firebase is saved on user variable. Once this, we call the `setUserLoggedIn()` method through the `userservice` injected on the contructor and we passed as a parameter the `user` variable.
+
+Option: use `setCustomParameters` to filter login with host domain.
+
+The `loginWithGoogle()` method will do all the logic to start session through firebase.
+
+The `logout()` method will do close session.
+
+```
+import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { Router } from '@angular/router';
+import { User } from '../interfaces/User';
+import { UserService } from './user.service';
 
 @Injectable()
 export class AuthService {
+  user: User;
 
-    user: Observable<firebase.User>;
+  constructor(
+    public afAuth: AngularFireAuth,
+    private router: Router,
+    public userservice: UserService
+  ) {
+    this.getDataFromFirebase();
+  }
 
-    constructor(public afAuth: AngularFireAuth, private router:Router) {
-      this.user = afAuth.authState;
-      this.afAuth.authState.subscribe(auth => {
-          if(auth) {
-            this.router.navigate(['/dashboard']);
-              console.log('You are authenticated', auth)
-        ***REMOVED*** else {
-              console.log('You are not authenticated')
-        ***REMOVED***
+  getDataFromFirebase() {
+    this.afAuth.authState.subscribe(auth => {
+      if (auth) {
+        this.user = auth; // save data firebase on user
+        console.log('You are authenticated');
+        this.userservice.setUserLoggedIn(this.user); // set user data from firebase on local storage
+      } else {
+        console.log('You are not authenticated');
+      }
+    });
+  }
 
-    ***REMOVED***);
-  ***REMOVED***
+  loginWithGoogle() {
 
-    loginWithGoogle() {
+    //setCustomParameters host domain (hd)
+    /**
 
-      //setCustomParameters host domain (hd)
-
-      /**
-
-        let provider = new firebase.auth.GoogleAuthProvider();
-        provider.addScope('email');
-        provider.setCustomParameters({
-          'hd':'domain.edu.mx'
-      ***REMOVED***);
-        this.afAuth.auth.signInWithPopup(provider)
-        .then((data)=>{
-          this.router.navigate(['/dashboard']);
-      ***REMOVED***)
-        .catch((error)=>{
-          console.log(error)
-      ***REMOVED***);
+  let provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('email');
+  provider.setCustomParameters({
+    'hd':'domain.edu.mx'
+  });
+  this.afAuth.auth.signInWithPopup(provider)
+  .then((data)=>{
+    this.router.navigate(['/dashboard']);
+  })
+  .catch((error)=>{
+    console.log(error)
+  });
 
       **/
 
-      this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-      .then((data)=>{
+    this.afAuth.auth
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then(() => {
         this.router.navigate(['/dashboard']);
-    ***REMOVED***)
-      .catch((error)=>{
-        console.log(error)
-    ***REMOVED***);
-  ***REMOVED***
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
-    logout() {
-      this.afAuth.auth.signOut()
-      .then(()=>{
-        this.router.navigate(['/login']);
-    ***REMOVED***);
-  ***REMOVED***
+  logout() {
+    this.afAuth.auth.signOut().then(() => {
+      this.router.navigate(['/login']);
+    });
+  }
 }
+
 ```
 
-### 9.- Create login component
+### 10.- Create login component
 
 `ng g c components/login --skipTests --inlineStyle`
 
@@ -175,7 +220,7 @@ login.component.html
 </div>
 ```
 
-login.component.ts
+`login.component.ts`
 
 Import service and injects on constructor
 
@@ -190,16 +235,16 @@ Create method `loginWithGoogle()` and through the injected service we call the m
 ```
 loginWithGoogle() {
     this.authservice.loginWithGoogle();
-***REMOVED***
+  }
 ```
 
-### 10.- Create dashboard component
+### 11.- Create dashboard component
 
 `ng g c components/dashboard --skipTests --inlineStyle`
 
 dashboard.component.hml
 
-With `userdata` variable call properties from interface, in this case `displayName, email, uid and photoURL`, remember that the `userdata` of type UserData stores the data that is brought from the firebase service.
+With `userservice` injected on the contructor from `UserService`, we call properties from interface, in this case `displayName, email, uid and photoURL`, remember that this data was saved on the localstorage and we call it.
 
 The button call method `logout()` with the `ngClick` directive for close session.
 
@@ -214,15 +259,15 @@ The button call method `logout()` with the `ngClick` directive for close session
     <div class="card" style="width: 20rem;">
       <img
         class="card-img-top"
-        src="{{ userdata.photoURL }}"
+        src="{{ userservice.userLogged?.photoURL }}"
         alt="Card image cap"
       />
       <div class="card-body">
         <h5 class="card-title">
-          <strong>{{ userdata.displayName }}</strong>
+          <strong>{{ userservice.userLogged?.displayName }}</strong>
         </h5>
-        <p class="card-text">{{ userdata.email }}</p>
-        <p class="card-text"><strong>UID:</strong> {{ userdata.uid }}</p>
+        <p class="card-text">{{ userservice.userLogged?.email }}</p>
+        <p class="card-text"><strong>UID:</strong> {{ userservice.userLogged?.uid }}</p>
         <a href="#" class="btn btn-danger" (click)="logout()">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>
@@ -232,35 +277,20 @@ The button call method `logout()` with the `ngClick` directive for close session
 </div>
 ```
 
-dashboard.component.ts
+`dashboard.component.ts`
 
-Create variable of User type and assigns empty value to the properties
-
-```
-userdata: User = {
-    displayName: '',
-    email: '',
-    uid: '',
-    photoURL: ''
-***REMOVED***;
-```
-
-In constructor injects the service and router and subscribe to the authentication state, userdara variable saves the data from firebase authentication. This verify if user is logged.
+In constructor we injects the `AuthService` for logout. `UserService` call it the `getUserLoggedIn()` method for display data from local storage.
 
 ```
-constructor(private _authservice: AuthService, private router: Router){
-    this._authservice.afAuth.authState.subscribe(auth => {
-      if (auth === null) {
-        this.router.navigate(['/login']);
-    ***REMOVED*** else {
-        this.userdata = auth;
-        this.router.navigate(['/dashboard']);
-    ***REMOVED***
-  ***REMOVED***);
-}
+constructor(
+    private _authservice: AuthService,
+    public userservice: UserService
+  ) {
+    this.userservice.getUserLoggedIn(); // Bring user data from local storage
+  }
 ```
 
-Now, create method `logout()` to close session.
+`logout()` to close session.
 
 ```
 logout() {
@@ -269,7 +299,7 @@ logout() {
 }
 ```
 
-### 11.- Create routes on `app.routing.module.ts`
+### 12.- Create routes on `app.routing.module.ts`
 
 ```
 const APP_ROUTES: Routes = [
@@ -296,3 +326,5 @@ export const APP_ROUTING = RouterModule.forRoot(APP_ROUTES, {useHash:true});
 ![Alt text](https://pbs.twimg.com/media/DJDyjYeUMAAAZdC.jpg 'Credentials')
 
 ![Alt text](https://i.imgur.com/juEbNfP.png 'Dashboard Component')
+
+![Alt text](https://i.imgur.com/mLOMuax.png 'Local Storage')
